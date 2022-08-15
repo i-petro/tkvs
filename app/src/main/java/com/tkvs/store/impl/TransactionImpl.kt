@@ -13,6 +13,9 @@ class TransactionImpl<K : Any, V : Any>(
 
     override fun set(key: K, value: V) {
         assert(!isProcessed) { "unable to set value using committed or cancelled transaction" }
+        parent.get(key)
+            ?.takeIf { it != value }
+            ?.let(deletedValues::add)
         transactionMemory[key] = Optional.ofNullable(value)
     }
 

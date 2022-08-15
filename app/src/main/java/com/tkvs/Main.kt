@@ -47,7 +47,7 @@ object Main {
 
             val lastTransaction = requireNotNull(transactions.peek())
 
-            when (command){
+            when (command) {
                 COMMAND_SET -> {
                     requireNotNull(param1)
                     requireNotNull(param2)

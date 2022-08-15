@@ -171,7 +171,6 @@ class TransactionsStoreTest {
         }
     }
 
-    // TODO
     @Test
     fun `should not count value if new transaction overrides it`() {
         testable.runInTransaction {
@@ -182,8 +181,23 @@ class TransactionsStoreTest {
 
             runInTransaction {
                 set("foo2", "not-bar")
-
                 assertEquals(1, count("bar"))
+
+                set("foo2", "bar")
+                assertEquals(2, count("bar"))
+
+                set("foo3", "bar")
+                set("foo4", "bar")
+
+
+                runInTransaction {
+                    assertEquals(4, count("bar"))
+                    set("foo1", "not-bar")
+                    set("foo3", "not-bar")
+                    set("foo5", "bar")
+
+                    assertEquals(3, count("bar"))
+                }
             }
         }
     }
