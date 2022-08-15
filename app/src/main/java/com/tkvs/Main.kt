@@ -45,31 +45,33 @@ object Main {
             val param1 = params.getOrNull(1)
             val param2 = params.getOrNull(2)
 
+            val lastTransaction = requireNotNull(transactions.peek())
+
             when (command){
                 COMMAND_SET -> {
                     requireNotNull(param1)
                     requireNotNull(param2)
-                    transactions.peek()!!.set(param1, param2)
+                    lastTransaction.set(param1, param2)
                     println("Set \"$param1\" = \"$param2\"")
                 }
                 COMMAND_GET -> {
                     requireNotNull(param1)
-                    val result = transactions.peek()!!.get(param1)
+                    val result = lastTransaction.get(param1)
                     println("Value for key \"$param1\" = \"$result\"")
                 }
                 COMMAND_DELETE -> {
                     requireNotNull(param1)
-                    val result = transactions.peek()!!.delete(param1)
+                    val result = lastTransaction.delete(param1)
                     println("Deleted the key \"$param1\" with value \"$result\"")
                 }
                 COMMAND_COUNT -> {
                     requireNotNull(param1)
-                    val result = transactions.peek()!!.count(param1)
+                    val result = lastTransaction.count(param1)
                     println("Count of keys with value \"$param1\" = $result")
                 }
                 COMMAND_BEGIN -> {
                     println("Starting transaction #${transactions.size}...")
-                    transactions.push(transactions.peek()!!.beginNestedTransaction())
+                    transactions.push(lastTransaction.beginNestedTransaction())
                 }
                 COMMAND_COMMIT -> {
                     println("Committing transaction #${transactions.size - 1}...")
